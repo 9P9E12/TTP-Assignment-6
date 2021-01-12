@@ -1,4 +1,10 @@
 import React from 'react';
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 //Create the ZipSearch
 class ZipSearch extends React.Component{
@@ -11,7 +17,7 @@ class ZipSearch extends React.Component{
              * A bool to let us know if the ZIP Code is invalid
              * A bool to let us know if the page is loading
              */
-            zipCode: 10016,
+            zipCode: 0,
             cities: [],
             error: false,
             loading: true
@@ -40,8 +46,6 @@ class ZipSearch extends React.Component{
                 throw new Error("Error fetching data")
             }
         }).then(data=>{
-            //Debug console log
-            console.log(data)
             //Set array of cities equal to the data, note we are no longer loading nor do we have an error
             this.setState({
                 cities: data,
@@ -62,15 +66,36 @@ class ZipSearch extends React.Component{
             <div>
                 {this.state.loading ? <div>Loading. . . </div> : 
                 <div>
-                <header>Zip Code Search</header>
+                    <Jumbotron fluid>
+                        <h1><b><i>Zip Code Search</i></b></h1>
+                    </Jumbotron>
                 <form>
-                    <input type="number" name="zipCode" placeholder="Try 10016" onChange={this.onChange}></input>
+                    <label><b>Zip Code:</b></label>
+                    <input type="number" id="zipCode" name="zipCode" placeholder="Try 10016" onChange={this.onChange}></input>
                 </form>
-                {this.state.error === true ? <div>Error: {this.state.zipCode} is invalid </div> :
+                <Container>
+                    <Col>
+                {this.state.error === true ? <div>No Results </div> :
                 this.state.cities.map((item,index)=>(
-                    <div key={index}> {item.City}</div>
+                    <div key={index}>
+                        <Row className="justify-content-md-center">
+                        <Card
+                        bg="secondary" 
+                        style={{ width: '18rem' }}>
+                            <Card.Header as="h5">{item.LocationText}</Card.Header>
+                            <ListGroup variant="flush">
+                <ListGroup.Item><li className="text-left">State: {item.State}</li></ListGroup.Item>
+                                <ListGroup.Item><li className="text-left">Location: ({item.Lat},{item.Long})</li></ListGroup.Item>
+                <ListGroup.Item><li className="text-left">Population (estimated): {item.EstimatedPopulation}</li></ListGroup.Item>
+                <ListGroup.Item><li className="text-left">Total Wages: {item.TotalWages}</li></ListGroup.Item>
+                            </ListGroup>
+                        </Card>
+                        </Row>
+                    </div>
                 ))
                 }
+                    </Col>
+                </Container>
                 </div>}
             </div>
         );
