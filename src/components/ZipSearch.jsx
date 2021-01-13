@@ -36,7 +36,7 @@ class ZipSearch extends React.Component{
     }
     //Fetch the data for the zip code
     fetchNewData = (zipCode)=>{
-        const url = "http://ctp-zip-api.herokuapp.com/zip/" + zipCode
+        const url = "https://ctp-zip-api.herokuapp.com/zip/" + zipCode
         fetch(url).then(response =>{
             if(response.ok){
                 //Return the array of cities at said ZIP Code
